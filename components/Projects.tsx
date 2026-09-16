@@ -31,8 +31,8 @@ const projects = [
     description:
       "Trang web bạn đang xem đây — xây bằng Next.js 16, React 19 và Tailwind CSS. Đây là bài tập trong quá trình học tại LAZTAR của mình",
     tech: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
-    url: "#",
-    external: false,
+    url: "https://github.com/lehoangthuan4568/laztar-portfolio",
+    external: true,
     badge: "Đang xem",
     gradient: "linear-gradient(135deg, #C67B3C 0%, #D4956A 50%, #E8B88A 100%)",
     emoji: "🎨",
@@ -41,8 +41,8 @@ const projects = [
   {
     title: "Báo Cáo PEEP Tuần 1",
     description:
-      "Hệ thống báo cáo tiến độ học tập cá nhân tại LAZTAR. Dựng bằng Hugo, viết Markdown, đẩy lên GitHub tự động.",
-    tech: ["Hugo", "Markdown", "Git"],
+      "Nơi mình báo cáo tiến độ học tập cá nhân tại LAZTAR.",
+    tech: ["anything", "other things", "and more!"],
     url: "#",
     external: false,
     badge: "2 Bài báo cáo",
@@ -159,9 +159,8 @@ export default function Projects() {
                       </span>
                       {project.subItems && (
                         <span
-                          className={`text-sm text-[var(--text-muted)] transition-transform duration-300 ${
-                            expandedId === project.title ? "rotate-180" : ""
-                          }`}
+                          className={`text-sm text-[var(--text-muted)] transition-transform duration-300 ${expandedId === project.title ? "rotate-180" : ""
+                            }`}
                         >
                           ▼
                         </span>
@@ -189,37 +188,55 @@ export default function Projects() {
               </div>
             </a>
 
-            {/* Expanded Sub-items */}
+            {/* Expanded Sub-items (Timeline style) */}
             {project.subItems && (
               <div
-                className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                  expandedId === project.title
-                    ? "max-h-96 opacity-100 mt-3"
-                    : "max-h-0 opacity-0"
-                }`}
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${expandedId === project.title
+                  ? "max-h-[800px] opacity-100 mt-2 mb-2"
+                  : "max-h-0 opacity-0"
+                  }`}
               >
-                <div className="pl-12 pr-2 pb-2 space-y-3">
-                  {project.subItems.map((sub, idx) => (
-                    <a
-                      key={idx}
-                      href={sub.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/sub flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl border border-[var(--border)] bg-[var(--card)] hover:border-[var(--accent)] hover:shadow-[0_4px_20px_-10px_var(--accent)] transition-all duration-300"
-                    >
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-mono text-[var(--text-muted)] mb-1">
-                          {sub.date}
-                        </span>
-                        <span className="text-sm font-medium text-[var(--text)] group-hover/sub:text-[var(--accent)] transition-colors">
-                          {sub.title}
-                        </span>
+                <div className="relative pt-2 pb-3">
+                  {/* Vertical Timeline Line */}
+                  <div className="absolute left-7 sm:left-10 top-6 bottom-6 w-px bg-gradient-to-b from-transparent via-[var(--border)] to-transparent" />
+
+                  <div className="space-y-4 pl-14 sm:pl-20 pr-3 sm:pr-6">
+                    {project.subItems.map((sub, idx) => (
+                      <div key={idx} className="relative">
+                        {/* Timeline Dot */}
+                        <div className="absolute -left-[32.5px] sm:-left-[44.5px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[var(--background)] ring-[6px] ring-[var(--card)] border-[1.5px] border-[var(--accent)] z-10 group-hover/sub:bg-[var(--accent)] group-hover/sub:scale-125 group-hover/sub:shadow-[0_0_12px_var(--accent)] transition-all duration-300" />
+
+                        <a
+                          href={sub.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group/sub flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 rounded-2xl border border-[var(--border)] bg-[var(--background)] hover:border-[var(--accent)]/40 hover:shadow-[0_8px_30px_-12px_var(--accent)] transition-all duration-300"
+                        >
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--accent)] mb-1.5 opacity-80">
+                              {sub.date}
+                            </span>
+                            <span
+                              className="text-base sm:text-lg font-semibold text-[var(--text)] group-hover/sub:text-[var(--accent)] transition-colors"
+                              style={{ fontFamily: "var(--font-playfair)" }}
+                            >
+                              {sub.title}
+                            </span>
+                          </div>
+
+                          {/* Animated Arrow/Button */}
+                          <div className="mt-3 sm:mt-0 flex items-center gap-3">
+                            <span className="text-xs font-mono font-medium text-[var(--text-muted)] group-hover/sub:text-[var(--accent)] transition-colors opacity-0 sm:opacity-100 -translate-x-4 sm:translate-x-0 group-hover/sub:opacity-100 group-hover/sub:translate-x-0">Đọc bài</span>
+                            <div className="w-8 h-8 rounded-full border border-[var(--border)] group-hover/sub:border-[var(--accent)] flex items-center justify-center bg-[var(--card)] group-hover/sub:bg-[var(--accent)] text-[var(--text-muted)] group-hover/sub:text-white transition-all duration-300">
+                              <svg className="w-3.5 h-3.5 transform -rotate-45 group-hover/sub:rotate-0 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                              </svg>
+                            </div>
+                          </div>
+                        </a>
                       </div>
-                      <span className="text-xs font-mono text-[var(--accent)] opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all mt-2 sm:mt-0">
-                        Xem báo cáo →
-                      </span>
-                    </a>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
