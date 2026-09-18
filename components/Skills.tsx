@@ -1,28 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-
-function useScrollReveal() {
-  const ref = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            el.classList.add("animate-fade-up");
-            observer.unobserve(el);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return ref;
-}
+import React from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { Zap, Layers, Sprout } from "lucide-react";
 
 type SkillLevel = 1 | 2 | 3 | 4 | 5;
 
@@ -31,56 +11,51 @@ interface SkillItem {
   level: SkillLevel;
 }
 
-const skillGroups: {
-  title: string;
-  emoji: string;
-  subtitle: string;
-  items: SkillItem[];
-}[] = [
+const skillGroups = [
   {
     title: "Đang dùng hàng ngày",
-    emoji: "⚡",
+    icon: Zap,
     subtitle: "Core stack",
     items: [
-      { name: "React 19", level: 4 },
-      { name: "Next.js 16", level: 3 },
-      { name: "Tailwind CSS", level: 5 },
-      { name: "TypeScript", level: 3 },
-      { name: "Git & GitHub", level: 4 },
+      { name: "React 19", level: 4 as SkillLevel },
+      { name: "Next.js 16", level: 3 as SkillLevel },
+      { name: "Tailwind CSS", level: 5 as SkillLevel },
+      { name: "TypeScript", level: 3 as SkillLevel },
+      { name: "Git & GitHub", level: 4 as SkillLevel },
     ],
   },
   {
     title: "Nền tảng vững",
-    emoji: "🧱",
+    icon: Layers,
     subtitle: "Fundamentals",
     items: [
-      { name: "HTML5 & CSS3", level: 5 },
-      { name: "JavaScript ES6+", level: 4 },
-      { name: "Responsive Design", level: 4 },
-      { name: "Chrome DevTools", level: 3 },
+      { name: "HTML5 & CSS3", level: 5 as SkillLevel },
+      { name: "JavaScript ES6+", level: 4 as SkillLevel },
+      { name: "Responsive Design", level: 4 as SkillLevel },
+      { name: "Chrome DevTools", level: 3 as SkillLevel },
     ],
   },
   {
     title: "Đang học thêm",
-    emoji: "🌱",
+    icon: Sprout,
     subtitle: "Growing",
     items: [
-      { name: "Hugo SSG", level: 2 },
-      { name: "Component Architecture", level: 3 },
-      { name: "Web Accessibility", level: 2 },
-      { name: "Clean Code", level: 3 },
+      { name: "Hugo SSG", level: 2 as SkillLevel },
+      { name: "Component Architecture", level: 3 as SkillLevel },
+      { name: "Web Accessibility", level: 2 as SkillLevel },
+      { name: "Clean Code", level: 3 as SkillLevel },
     ],
   },
 ];
 
 function SkillDots({ level, max = 5 }: { level: number; max?: number }) {
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1.5">
       {Array.from({ length: max }, (_, i) => (
         <span
           key={i}
-          className={`skill-dot ${
-            i < level ? "skill-dot-filled" : "skill-dot-empty"
+          className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+            i < level ? "bg-[var(--text)]" : "bg-[var(--border)]"
           }`}
         />
       ))}
@@ -89,65 +64,78 @@ function SkillDots({ level, max = 5 }: { level: number; max?: number }) {
 }
 
 export default function Skills() {
-  const sectionRef = useScrollReveal();
+  const reduce = useReducedMotion();
 
   return (
-    <section ref={sectionRef} id="skills" className="py-16 opacity-0">
+    <section id="skills" className="py-24">
       {/* Section divider */}
       <div className="section-divider mb-16" />
 
       {/* Section header */}
-      <div className="mb-10">
-        <p className="text-xs font-mono uppercase tracking-[0.2em] text-[var(--text-muted)] mb-2">
+      <div className="mb-12">
+        <p className="text-xs font-mono uppercase tracking-[0.2em] text-[var(--text-muted)] mb-3">
           Kỹ năng
         </p>
         <h2
-          className="text-2xl sm:text-3xl font-semibold tracking-tight"
+          className="text-3xl sm:text-4xl font-semibold tracking-tight"
           style={{ fontFamily: "var(--font-playfair)" }}
         >
           Công cụ trong tay
         </h2>
       </div>
 
-      {/* Skill cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 stagger">
-        {skillGroups.map((group) => (
-          <div
-            key={group.title}
-            className="card-lift rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 opacity-0 animate-fade-up"
-          >
-            {/* Header */}
-            <div className="flex items-center gap-2.5 mb-1">
-              <span className="text-xl">{group.emoji}</span>
-              <div>
-                <h3 className="font-semibold text-sm text-[var(--text)]">
-                  {group.title}
-                </h3>
-                <p className="text-[10px] font-mono uppercase tracking-widest text-[var(--text-muted)]">
-                  {group.subtitle}
-                </p>
+      {/* Skill cards - Bento style */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {skillGroups.map((group, i) => {
+          const Icon = group.icon;
+          return (
+            <motion.div
+              key={group.title}
+              initial={reduce ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{
+                duration: 0.6,
+                delay: i * 0.1,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 card-lift flex flex-col"
+            >
+              {/* Header */}
+              <div className="flex items-center gap-3.5 mb-6">
+                <div className="p-2 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--text-secondary)]">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-base text-[var(--text)] tracking-tight">
+                    {group.title}
+                  </h3>
+                  <p className="text-[10px] font-mono uppercase tracking-widest text-[var(--text-muted)] mt-0.5">
+                    {group.subtitle}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            {/* Divider */}
-            <div className="h-px bg-[var(--border)] my-3" />
+              {/* Divider */}
+              <div className="h-px bg-[var(--border)] mb-5" />
 
-            {/* Skills with dots */}
-            <ul className="space-y-2.5">
-              {group.items.map((item) => (
-                <li
-                  key={item.name}
-                  className="flex items-center justify-between gap-2 text-sm"
-                >
-                  <span className="text-[var(--text-secondary)]">
-                    {item.name}
-                  </span>
-                  <SkillDots level={item.level} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+              {/* Skills with dots */}
+              <ul className="space-y-4 flex-1">
+                {group.items.map((item) => (
+                  <li
+                    key={item.name}
+                    className="flex items-center justify-between gap-3 text-sm"
+                  >
+                    <span className="text-[var(--text-secondary)] font-medium">
+                      {item.name}
+                    </span>
+                    <SkillDots level={item.level} />
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          );
+        })}
       </div>
     </section>
   );

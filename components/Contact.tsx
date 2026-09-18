@@ -1,80 +1,53 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { profileData } from "@/data/profile";
-
-function useScrollReveal() {
-  const ref = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            el.classList.add("animate-fade-up");
-            observer.unobserve(el);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return ref;
-}
+import { motion, useReducedMotion } from "motion/react";
+import { MessageSquare, Mail } from "lucide-react";
 
 export default function Contact() {
-  const sectionRef = useScrollReveal();
+  const reduce = useReducedMotion();
 
   return (
-    <section ref={sectionRef} id="contact" className="py-16 opacity-0">
+    <section id="contact" className="py-24">
       {/* Section divider */}
       <div className="section-divider mb-16" />
 
       {/* CTA card */}
-      <div className="rounded-3xl bg-gradient-to-br from-[var(--bg-alt)] to-[var(--bg)] border border-[var(--border)] p-8 sm:p-12 text-center relative overflow-hidden">
-        {/* Decorative circles */}
-        <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-[var(--accent)]/5 blur-2xl" />
-        <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-[var(--accent)]/5 blur-2xl" />
-
-        <div className="relative z-10">
-          <p className="text-4xl mb-5">💬</p>
-          <h2
-            className="text-2xl sm:text-3xl font-semibold tracking-tight mb-3"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
-            Nói chuyện với mình
-          </h2>
-          <p className="text-[var(--text-secondary)] text-base max-w-md mx-auto mb-8 leading-relaxed">
-            Muốn trao đổi về code, chia sẻ kinh nghiệm, hoặc góp ý cho mình?
-            Cứ thoải mái gửi email nhé.
-          </p>
-          <a
-            href={`mailto:${profileData.email}`}
-            className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold rounded-full bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect width="20" height="16" x="2" y="4" rx="2" />
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-            </svg>
-            Gửi email cho mình
-          </a>
-          <p className="text-xs text-[var(--text-muted)] mt-5 font-mono tracking-wide">
-            {profileData.email}
-          </p>
+      <motion.div
+        initial={reduce ? false : { opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-10 sm:p-16 text-center relative overflow-hidden flex flex-col items-center justify-center"
+      >
+        <div className="mb-6 p-4 rounded-2xl bg-[var(--bg)] border border-[var(--border)] text-[var(--text-secondary)]">
+          <MessageSquare className="w-8 h-8" strokeWidth={1.5} />
         </div>
-      </div>
+        
+        <h2
+          className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4"
+          style={{ fontFamily: "var(--font-playfair)" }}
+        >
+          Nói chuyện với mình
+        </h2>
+        
+        <p className="text-[var(--text-secondary)] text-lg max-w-md mx-auto mb-10 leading-relaxed">
+          Muốn trao đổi về code, chia sẻ kinh nghiệm, hoặc góp ý cho mình? Cứ thoải mái liên hệ nhé.
+        </p>
+        
+        <a
+          href={`mailto:${profileData.email}`}
+          className="inline-flex items-center gap-2.5 px-8 py-3.5 text-base font-medium rounded-lg bg-[#111111] text-white hover:bg-[#333333] transition-transform active:scale-[0.98]"
+        >
+          <Mail className="w-5 h-5" />
+          Gửi email
+        </a>
+        
+        <p className="text-xs text-[var(--text-muted)] mt-6 font-mono tracking-wide">
+          {profileData.email}
+        </p>
+      </motion.div>
     </section>
   );
 }

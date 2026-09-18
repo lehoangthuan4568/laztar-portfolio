@@ -15,11 +15,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
+      className={`sticky top-0 z-50 transition-all duration-300 ${scrolled
           ? "backdrop-blur-xl bg-[var(--bg)]/80 border-b border-[var(--border)]/60 shadow-sm"
           : "bg-transparent border-b border-transparent"
-      }`}
+        }`}
     >
       <div className="flex items-center justify-between py-4">
         {/* Logo / Name — serif with accent dot */}
@@ -77,9 +76,8 @@ export default function Navbar() {
 
       {/* Mobile menu — slide down */}
       <div
-        className={`sm:hidden overflow-hidden transition-all duration-300 ${
-          mobileOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`sm:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
+          }`}
       >
         <nav className="pb-4 pt-2 flex flex-col gap-1">
           {profileData.navigation.map((item) => (
